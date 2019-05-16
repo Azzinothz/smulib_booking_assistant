@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:swallow_nest_flutter/booking/book.dart';
+import 'package:swallow_nest_flutter/booking/period.dart';
 
 class RoomStatusPage extends StatefulWidget {
-  RoomStatusPage(this.date);
-  final DateTime date;
-
   @override
   State<StatefulWidget> createState() {
     return RoomStatusState();
@@ -17,12 +16,8 @@ class RoomStatusState extends State<RoomStatusPage> {
 
   void getRoomsStatus() async {
     Dio dio = Dio();
-    String url = "http://101.132.144.204:8082/api/room?day=" +
-        widget.date.year.toString() +
-        "-" +
-        widget.date.month.toString() +
-        "-" +
-        widget.date.day.toString();
+    String url =
+        "http://101.132.144.204:8082/api/room?day=" + bookingDetail["day"];
     Response response = await dio.get(url);
     setState(() {
       roomsStatus = response.data;
@@ -46,8 +41,8 @@ class RoomStatusState extends State<RoomStatusPage> {
       }
       roomCards = List();
       roomsStatus.forEach((roomStatus) {
-        InkWell roomCard =
-            buildRoomCard(roomStatus["name"], roomStatus["booked_periods"]);
+        InkWell roomCard = buildRoomCard(roomStatus["name"],
+            roomStatus["space"], roomStatus["booked_periods"]);
         roomCards.add(roomCard);
       });
     });
@@ -63,23 +58,13 @@ class RoomStatusState extends State<RoomStatusPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.date.year.toString() +
-            "年" +
-            widget.date.month.toString() +
-            "月" +
-            widget.date.day.toString() +
-            "日" +
-            " Test 1"),
+        title: Text(bookingDetail["date"]),
         centerTitle: true,
         elevation: 0,
       ),
       body: Container(
         color: Theme.of(context).primaryColor,
         padding: EdgeInsets.all(20),
-        // child: ListView(
-        //   children:
-        //       roomCards != null ? roomCards : <Widget>[Text("Loading...")],
-        // ),
         child: () {
           if (roomCards != null) {
             return ListView(
@@ -88,9 +73,9 @@ class RoomStatusState extends State<RoomStatusPage> {
           } else {
             return Center(
                 child: Text(
-              "Loading...",
+              "正在获取空间信息...",
               style: TextStyle(
-                fontSize: 48,
+                fontSize: 36,
                 color: Colors.white,
               ),
             ));
@@ -100,16 +85,8 @@ class RoomStatusState extends State<RoomStatusPage> {
     );
   }
 
-  // void setRoomCards() {
-  //   List<InkWell> roomCards;
-  //   roomsStatus.forEach((roomStatus) {
-  //     InkWell roomCard =
-  //         buildRoomCard(roomStatus["name"], roomStatus["booked_periods"]);
-  //     roomCards.add(roomCard);
-  //   });
-  // }
-
-  InkWell buildRoomCard(String roomName, List<dynamic> bookedPeriods) {
+  InkWell buildRoomCard(
+      String roomName, num space, List<dynamic> bookedPeriods) {
     List<Widget> contents = <Widget>[
       ListTile(
         title: Text(
@@ -120,18 +97,26 @@ class RoomStatusState extends State<RoomStatusPage> {
       Divider(),
     ];
 
+    List<Widget> bookedPeriodsListTiles = List();
     if (bookedPeriods != null) {
       bookedPeriods.forEach((bookedPeriod) {
         ListTile item = ListTile(
           leading: Icon(Icons.error),
           title: Text(bookedPeriod[0] + " - " + bookedPeriod[1]),
         );
-        contents.add(item);
+        bookedPeriodsListTiles.add(item);
       });
+      contents.addAll(bookedPeriodsListTiles);
     }
 
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        bookingDetail["space"] = space.toString();
+        bookingDetail["name"] = roomName;
+        bookingDetail["book_period_list_tiles"] = bookedPeriodsListTiles;
+        Navigator.push(context,
+            MaterialPageRoute(builder: (BuildContext context) => PeriodPage()));
+      },
       child: Card(
         child: Container(
           width: double.infinity,

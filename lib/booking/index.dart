@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:swallow_nest_flutter/booking/room.dart';
+import 'package:swallow_nest_flutter/booking/book.dart';
 
 class BookingPage extends StatefulWidget {
   @override
@@ -24,10 +25,17 @@ class BookingState extends State<BookingPage> {
       }
       setState(() {
         pickedDate = DateTime(date.year, date.month, date.day);
+        bookingDetail["day"] = convertDateTimeToBookingDay(pickedDate);
+        bookingDetail["date"] = pickedDate.year.toString() +
+            "年" +
+            pickedDate.month.toString() +
+            "月" +
+            pickedDate.day.toString() +
+            "日";
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (BuildContext context) => RoomStatusPage(pickedDate)));
+                builder: (BuildContext context) => RoomStatusPage()));
       });
     });
   }
