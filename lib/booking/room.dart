@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
-import 'package:swallow_nest_flutter/booking/book.dart';
-import 'package:swallow_nest_flutter/booking/period.dart';
+import 'package:smulib_booking_assistant/booking/dio.dart';
+import 'package:smulib_booking_assistant/booking/book.dart';
+import 'package:smulib_booking_assistant/booking/period.dart';
 
 class RoomStatusPage extends StatefulWidget {
   @override
@@ -14,13 +14,10 @@ class RoomStatusState extends State<RoomStatusPage> {
   dynamic roomsStatus;
   List<InkWell> roomCards;
 
-  void getRoomsStatus() async {
-    Dio dio = Dio();
-    String url =
-        "http://101.132.144.204:8082/api/room?day=" + bookingDetail["day"];
-    Response response = await dio.get(url);
+  void setRoomsStatus() async {
+    dynamic data = await getRoomStatus(bookingDetail["day"]);
     setState(() {
-      roomsStatus = response.data;
+      roomsStatus = data;
       if (roomsStatus == null) {
         roomCards = <InkWell>[
           InkWell(
@@ -51,7 +48,7 @@ class RoomStatusState extends State<RoomStatusPage> {
   @override
   void initState() {
     super.initState();
-    getRoomsStatus();
+    setRoomsStatus();
   }
 
   @override

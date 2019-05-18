@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:swallow_nest_flutter/booking/index.dart';
+import 'package:smulib_booking_assistant/booking/index.dart';
 
 void main() => runApp(MyApp());
 

@@ -20,5 +20,25 @@ Map bookingDetail = {
 };
 
 String convertDateTimeToBookingDay(DateTime dt) {
-  return dt.year.toString() + "-" + dt.month.toString() + "-" + dt.day.toString();
+  String result = dt.year.toString();
+  [dt.month, dt.day].forEach((item) {
+    if (item < 10) {
+      result += "-0" + item.toString();
+    } else {
+      result += "-" + item.toString();
+    }
+  });
+  return result;
+}
+
+String convertTimeToBookingPeriod(TimeOfDay time) {
+  String result = "";
+  [time.hour, time.minute].forEach((item) {
+    if (item < 10) {
+      result += ":0" + item.toString();
+    } else {
+      result += ":" + item.toString();
+    }
+  });
+  return result.substring(1);
 }

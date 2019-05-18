@@ -1,4 +1,4 @@
-package com.example.swallow_nest_flutter;
+package com.example.smulib_booking_assistant;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

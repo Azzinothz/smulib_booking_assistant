@@ -1,4 +1,4 @@
-# swallow_nest_flutter
+# smulib_booking_assistant
 
 A new Flutter project.
 

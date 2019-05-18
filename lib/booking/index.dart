@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:swallow_nest_flutter/booking/room.dart';
-import 'package:swallow_nest_flutter/booking/book.dart';
+import 'package:smulib_booking_assistant/booking/room.dart';
+import 'package:smulib_booking_assistant/booking/book.dart';
 
 class BookingPage extends StatefulWidget {
   @override

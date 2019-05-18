@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:swallow_nest_flutter/booking/book.dart';
+import 'package:smulib_booking_assistant/booking/book.dart';
+import 'package:smulib_booking_assistant/booking/member.dart';
 
 class PeriodPage extends StatefulWidget {
   @override
@@ -13,15 +14,14 @@ class PeriodState extends State<PeriodPage> {
   TimeOfDay endTime;
   bool confirm = false;
 
-  String convertTime(TimeOfDay time) {
-    return time.hour.toString() + ":" + time.minute.toString();
-  }
-
   void setStartTime() async {
     TimeOfDay pickedTime = await showTimePicker(
       context: context,
       initialTime: startTime != null ? startTime : TimeOfDay.now(),
     );
+    if (pickedTime == null) {
+      return;
+    }
     setState(() {
       startTime = pickedTime;
       if (endTime != null) {
@@ -41,6 +41,9 @@ class PeriodState extends State<PeriodPage> {
       context: context,
       initialTime: endTime != null ? endTime : TimeOfDay.now(),
     );
+    if (pickedTime == null) {
+      return;
+    }
     setState(() {
       endTime = pickedTime;
       if (startTime != null) {
@@ -92,7 +95,7 @@ class PeriodState extends State<PeriodPage> {
                             color: Theme.of(context).accentColor,
                           ),
                           title: Text(startTime != null
-                              ? convertTime(startTime)
+                              ? convertTimeToBookingPeriod(startTime)
                               : "开始时间"),
                         ),
                       ),
@@ -103,8 +106,9 @@ class PeriodState extends State<PeriodPage> {
                             Icons.access_time,
                             color: Theme.of(context).accentColor,
                           ),
-                          title: Text(
-                              endTime != null ? convertTime(endTime) : "结束时间"),
+                          title: Text(endTime != null
+                              ? convertTimeToBookingPeriod(endTime)
+                              : "结束时间"),
                         ),
                       ),
                       Divider(),
@@ -117,10 +121,19 @@ class PeriodState extends State<PeriodPage> {
                           children: <Widget>[
                             FlatButton(
                               child: Text("确认，选择参与人员"),
-                              onPressed: confirm ? (){
-                                bookingDetail["start_time"] = convertTime(startTime);
-                                bookingDetail["end_time"] = convertTime(endTime);
-                              } : null,
+                              onPressed: confirm
+                                  ? () {
+                                      bookingDetail["start_time"] =
+                                          convertTimeToBookingPeriod(startTime);
+                                      bookingDetail["end_time"] =
+                                          convertTimeToBookingPeriod(endTime);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  MemberPage()));
+                                    }
+                                  : null,
                             )
                           ],
                         ),
