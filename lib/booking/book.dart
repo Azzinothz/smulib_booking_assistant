@@ -42,3 +42,42 @@ String convertTimeToBookingPeriod(TimeOfDay time) {
   });
   return result.substring(1);
 }
+
+
+class BookPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return BookState();
+  }
+}
+
+class BookState extends State<BookPage> {
+  String msg;
+
+  void getResult() async {
+    
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // msg = postBookingInfo(bookingDetail);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("预约结果"),
+        centerTitle: true,
+        leading: null,
+        elevation: 0,
+      ),
+      body: Container(
+        color: Theme.of(context).primaryColor,
+        alignment: Alignment.center,
+        // child: ,
+      ),
+    );
+  }
+}

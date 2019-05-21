@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smulib_booking_assistant/booking/book.dart';
 import 'package:smulib_booking_assistant/booking/dio.dart';
+import 'package:smulib_booking_assistant/booking/detail.dart';
 
 class MemberPage extends StatefulWidget {
   @override
@@ -11,7 +12,6 @@ class MemberPage extends StatefulWidget {
 
 class MemberState extends State<MemberPage> {
   List<Widget> memberCards = List();
-  List<String> members = List();
   TextEditingController memberInputController = TextEditingController();
 
   void addMember(String name) async {
@@ -20,25 +20,24 @@ class MemberState extends State<MemberPage> {
     if (stuID == null) {
       return;
     }
-    bookingDetail["stu_id"] = stuID;
+    bookingDetail["teamusers"].add(stuID);
     setState(() {
-      memberCards.add(buildMemberCard(name));
-      members.add(name);
+      memberCards.add(buildMemberCard(name, stuID));
     });
   }
 
-  void removeMember(String name) {
-    int i = members.indexOf(name);
+  void removeMember(String stuID) {
+    int i = bookingDetail["teamusers"].indexOf(stuID);
     if (i == -1) {
       return;
     }
+    bookingDetail["teamusers"].removeAt(i);
     setState(() {
       memberCards.removeAt(i);
-      members.removeAt(i);
     });
   }
 
-  Card buildMemberCard(String name) {
+  Card buildMemberCard(String name, String stuID) {
     return Card(
       child: ListTile(
         leading: CircleAvatar(
@@ -52,7 +51,7 @@ class MemberState extends State<MemberPage> {
             size: 30,
           ),
           onPressed: () {
-            removeMember(name);
+            removeMember(stuID);
           },
         ),
       ),
@@ -69,7 +68,12 @@ class MemberState extends State<MemberPage> {
         elevation: 0,
         actions: <Widget>[
           IconButton(
-            onPressed: (){},
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => DetailPage()));
+            },
             icon: Icon(Icons.check),
             iconSize: 30,
           )
