@@ -44,7 +44,7 @@ class LoginState extends State<LoginPage> {
                 Animation secondaryAnimation) {
               return FadeTransition(
                 opacity: animation,
-                child: BookingPage(),
+                child: IndexPage(),
               );
             }));
   }
