@@ -62,7 +62,7 @@ class PeriodState extends State<PeriodPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(bookingDetail["name"]),
+        title: Text(display["name"]),
         centerTitle: true,
         elevation: 0,
       ),
@@ -113,7 +113,7 @@ class PeriodState extends State<PeriodPage> {
                       ),
                       Divider(),
                     ] +
-                    bookingDetail["book_period_list_tiles"] +
+                    display["book_period_list_tiles"] +
                     [
                       Divider(),
                       ButtonTheme.bar(

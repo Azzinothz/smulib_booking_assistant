@@ -51,6 +51,11 @@ class LoginState extends State<LoginPage> {
   }
 
   void submit() async {
+    setState(() {
+      page = Scaffold(
+        body: Container(color: Theme.of(context).primaryColor),
+      );
+    });
     bool ok = await setToken(username.text, password.text);
     if (!ok) {
       return;

@@ -55,7 +55,7 @@ class RoomStatusState extends State<RoomStatusPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(bookingDetail["date"]),
+        title: Text(display["date"]),
         centerTitle: true,
         elevation: 0,
       ),
@@ -109,8 +109,8 @@ class RoomStatusState extends State<RoomStatusPage> {
     return InkWell(
       onTap: () {
         bookingDetail["space"] = space.toString();
-        bookingDetail["name"] = roomName;
-        bookingDetail["book_period_list_tiles"] = bookedPeriodsListTiles;
+        display["name"] = roomName;
+        display["book_period_list_tiles"] = bookedPeriodsListTiles;
         Navigator.push(context,
             MaterialPageRoute(builder: (BuildContext context) => PeriodPage()));
       },

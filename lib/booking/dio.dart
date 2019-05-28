@@ -3,7 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Dio dio = Dio();
 
-const baseURL = "http://101.132.144.204:8082";
+// const baseURL = "http://101.132.144.204:8082";
+const baseURL = "http://127.0.0.1:8082";
 String token = "";
 String name = "";
 String stuID = "";
@@ -27,11 +28,16 @@ Future<String> getStudentIDByName(String name) async {
 
 Future<String> postBookingInfo(Map form) async {
   String url = baseURL + "/api/room/" + form["space"];
-  Response response = await dio.post(url, data: form);
-  if (response.statusCode == 200) {
+  try {
+    await dio.post(url,
+        data: form,
+        options: Options(
+          headers: {"Authorization": "Bearer " + token},
+        ));
     return "success";
+  } on DioError catch (e) {
+    return e.response.data["message"];
   }
-  return "failed";
 }
 
 Future<bool> setToken(String username, String password) async {

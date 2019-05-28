@@ -47,7 +47,7 @@ class BookingState extends State<BookingPage> {
       setState(() {
         pickedDate = DateTime(date.year, date.month, date.day);
         bookingDetail["day"] = convertDateTimeToBookingDay(pickedDate);
-        bookingDetail["date"] = pickedDate.year.toString() +
+        display["date"] = pickedDate.year.toString() +
             "年" +
             pickedDate.month.toString() +
             "月" +

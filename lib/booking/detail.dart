@@ -77,8 +77,8 @@ class DetailState extends State<DetailPage> {
                         FlatButton(
                           onPressed: () {
                             bookingDetail["title"] = title.text;
-                            bookingDetail["applicaiton"] = application.text;
-                            bookingDetail["phone"] = phone.text;
+                            bookingDetail["application"] = application.text;
+                            bookingDetail["mobile"] = phone.text;
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
