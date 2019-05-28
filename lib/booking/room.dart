@@ -11,15 +11,50 @@ class RoomStatusPage extends StatefulWidget {
 }
 
 class RoomStatusState extends State<RoomStatusPage> {
-  dynamic roomsStatus;
-  List<InkWell> roomCards;
+  dynamic _roomsStatus;
+  List<InkWell> _roomCards;
 
-  void setRoomsStatus() async {
+  @override
+  void initState() {
+    super.initState();
+    _setRoomsStatus();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(display["date"]),
+        centerTitle: true,
+        elevation: 0,
+      ),
+      body: Container(
+        color: Theme.of(context).primaryColor,
+        padding: EdgeInsets.all(20),
+        child: () {
+          if (_roomCards != null) {
+            return ListView(
+              children: _roomCards,
+            );
+          } else {
+            return Center(
+                child: Container(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            ));
+          }
+        }(),
+      ),
+    );
+  }
+
+  void _setRoomsStatus() async {
     dynamic data = await getRoomStatus(bookingDetail["day"]);
     setState(() {
-      roomsStatus = data;
-      if (roomsStatus == null) {
-        roomCards = <InkWell>[
+      _roomsStatus = data;
+      if (_roomsStatus == null) {
+        _roomCards = <InkWell>[
           InkWell(
             onTap: () {},
             child: Card(
@@ -36,53 +71,16 @@ class RoomStatusState extends State<RoomStatusPage> {
         ];
         return;
       }
-      roomCards = List();
-      roomsStatus.forEach((roomStatus) {
-        InkWell roomCard = buildRoomCard(roomStatus["name"],
+      _roomCards = List();
+      _roomsStatus.forEach((roomStatus) {
+        InkWell roomCard = _buildRoomCard(roomStatus["name"],
             roomStatus["space"], roomStatus["booked_periods"]);
-        roomCards.add(roomCard);
+        _roomCards.add(roomCard);
       });
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    setRoomsStatus();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(display["date"]),
-        centerTitle: true,
-        elevation: 0,
-      ),
-      body: Container(
-        color: Theme.of(context).primaryColor,
-        padding: EdgeInsets.all(20),
-        child: () {
-          if (roomCards != null) {
-            return ListView(
-              children: roomCards,
-            );
-          } else {
-            return Center(
-                child: Text(
-              "正在获取空间信息...",
-              style: TextStyle(
-                fontSize: 36,
-                color: Colors.white,
-              ),
-            ));
-          }
-        }(),
-      ),
-    );
-  }
-
-  InkWell buildRoomCard(
+  InkWell _buildRoomCard(
       String roomName, num space, List<dynamic> bookedPeriods) {
     List<Widget> contents = <Widget>[
       ListTile(

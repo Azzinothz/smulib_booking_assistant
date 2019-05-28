@@ -32,7 +32,7 @@ class IndexPage extends StatefulWidget {
 }
 
 class IndexState extends State<IndexPage> {
-  DateTime pickedDate;
+  DateTime _pickedDate;
 
   @override
   Widget build(BuildContext context) {
@@ -58,28 +58,28 @@ class IndexState extends State<IndexPage> {
                     style: TextStyle(color: Colors.white, fontSize: 48),
                   ),
                 ),
-                buildDateChooser(context),
+                _buildDateChooser(context),
                 // Place holder
                 SizedBox(
                   height: 48,
                 ),
               ],
             ),
-            buildUserSwitcher(context),
+            _buildUserSwitcher(context),
           ],
         ),
       ),
     );
   }
 
-  Positioned buildUserSwitcher(BuildContext context) {
+  Positioned _buildUserSwitcher(BuildContext context) {
     return Positioned(
       bottom: 40,
       left: 1,
       right: 1,
       child: FlatButton(
         onPressed: () {
-          logout();
+          _logout();
         },
         child: Text(
           "切换用户",
@@ -92,14 +92,14 @@ class IndexState extends State<IndexPage> {
     );
   }
 
-  DecoratedBox buildDateChooser(BuildContext context) {
+  DecoratedBox _buildDateChooser(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: Colors.white,
       ),
       child: IconButton(
-        onPressed: pickDate,
+        onPressed: _pickDate,
         icon: Icon(Icons.calendar_today),
         color: Theme.of(context).primaryColor,
         iconSize: 78,
@@ -108,7 +108,7 @@ class IndexState extends State<IndexPage> {
     );
   }
 
-  void logout() async {
+  void _logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
     Navigator.pushAndRemoveUntil(
@@ -126,10 +126,10 @@ class IndexState extends State<IndexPage> {
     );
   }
 
-  void pickDate() {
+  void _pickDate() {
     Future<DateTime> pickADay = showDatePicker(
       context: context,
-      initialDate: pickedDate != null ? pickedDate : DateTime.now(),
+      initialDate: _pickedDate != null ? _pickedDate : DateTime.now(),
       firstDate: DateTime(2019),
       lastDate: DateTime(2020),
     );
@@ -138,13 +138,13 @@ class IndexState extends State<IndexPage> {
         return;
       }
       setState(() {
-        pickedDate = DateTime(date.year, date.month, date.day);
-        bookingDetail["day"] = convertDateTimeToBookingDay(pickedDate);
-        display["date"] = pickedDate.year.toString() +
+        _pickedDate = DateTime(date.year, date.month, date.day);
+        bookingDetail["day"] = convertDateTimeToBookingDay(_pickedDate);
+        display["date"] = _pickedDate.year.toString() +
             "年" +
-            pickedDate.month.toString() +
+            _pickedDate.month.toString() +
             "月" +
-            pickedDate.day.toString() +
+            _pickedDate.day.toString() +
             "日";
         Navigator.push(
             context,
