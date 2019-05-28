@@ -3,8 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Dio dio = Dio();
 
-const baseURL = "http://101.132.144.204:8082";
-// const baseURL = "http://127.0.0.1:8082";
+// const baseURL = "http://101.132.144.204:8082";
+const baseURL = "http://192.168.1.109:8082";
 String token = "";
 String name = "";
 String stuID = "";
@@ -40,26 +40,25 @@ Future<String> postBookingInfo(Map form) async {
   }
 }
 
-Future<bool> setToken(String username, String password) async {
+Future<int> setToken(String username, String password) async {
   String url = baseURL + "/api/authorization/token";
   Map json = {
     "username": username,
     "password": password,
   };
-  Response response = await dio.post(url, data: json);
-  if (response.statusCode != 200) {
-    return false;
+  try {
+    Response response = await dio.post(url, data: json);
+    token = response.data["token"];
+    name = response.data["name"];
+    stuID = response.data["stu_id"];
+    level = response.data["level"];
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("token", token);
+    prefs.setString("name", name);
+    prefs.setString("stu_id", stuID);
+    prefs.setInt("level", level);
+    return 200;
+  } on DioError catch (e) {
+    return e.response.statusCode;
   }
-  token = response.data["token"];
-  name = response.data["name"];
-  stuID = response.data["stu_id"];
-  level = response.data["level"];
-
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setString("token", token);
-  prefs.setString("name", name);
-  prefs.setString("stu_id", stuID);
-  prefs.setInt("level", level);
-
-  return true;
 }

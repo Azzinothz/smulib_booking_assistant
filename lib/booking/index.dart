@@ -5,6 +5,20 @@ import 'package:smulib_booking_assistant/booking/dio.dart';
 import 'package:smulib_booking_assistant/booking/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+void toIndexPage(context) {
+  Navigator.push(
+      context,
+      PageRouteBuilder(
+          transitionDuration: Duration(milliseconds: 500),
+          pageBuilder: (BuildContext context, Animation animation,
+              Animation secondaryAnimation) {
+            return FadeTransition(
+              opacity: animation,
+              child: IndexPage(),
+            );
+          }));
+}
+
 class IndexPage extends StatefulWidget {
   /// Creates an index page
   ///

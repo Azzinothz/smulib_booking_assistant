@@ -15,10 +15,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginState extends State<LoginPage> {
-  TextEditingController usernameCtrl = TextEditingController();
-  TextEditingController passwordCtrl = TextEditingController();
+  TextEditingController _usernameCtrl = TextEditingController();
+  TextEditingController _passwordCtrl = TextEditingController();
 
-  Scaffold page = Scaffold(
+  Scaffold _page = Scaffold(
     body: Container(
       color: Colors.blue,
     ),
@@ -27,29 +27,15 @@ class LoginState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    getToken();
+    _getToken();
   }
 
   @override
   Widget build(BuildContext context) {
-    return page;
+    return _page;
   }
 
-  void toIndexPage() {
-    Navigator.push(
-        context,
-        PageRouteBuilder(
-            transitionDuration: Duration(milliseconds: 500),
-            pageBuilder: (BuildContext context, Animation animation,
-                Animation secondaryAnimation) {
-              return FadeTransition(
-                opacity: animation,
-                child: IndexPage(),
-              );
-            }));
-  }
-
-  void getToken() async {
+  void _getToken() async {
     /// Get token from local storage, if succeeds, push to the next page
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString("token");
@@ -58,32 +44,69 @@ class LoginState extends State<LoginPage> {
       name = prefs.getString("name");
       stuID = prefs.getString("stu_id");
       level = prefs.getInt("level");
-      toIndexPage();
+      toIndexPage(context);
       return;
     } else {
       setState(() {
-        page = buildLoginPage();
+        _page = _buildLoginPage();
       });
       return;
     }
   }
 
-  void submit() async {
-    setState(() {
-      page = Scaffold(
-        body: Container(color: Theme.of(context).primaryColor),
-      );
-    });
-    bool ok = await setToken(usernameCtrl.text, passwordCtrl.text);
-    if (!ok) {
-      return;
+  void _submit() async {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => Center(
+              child: CircularProgressIndicator(),
+            ));
+    int code = await setToken(_usernameCtrl.text, _passwordCtrl.text);
+    Navigator.pop(context);
+    switch (code) {
+      case 200:
+        toIndexPage(context);
+        break;
+      case 403:
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => _buildErrorCard("用户名或密码错误"),
+        );
+        break;
+      case 404:
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => _buildErrorCard("抱歉，你未获得使用权限"),
+        );
+        break;
     }
-
-    toIndexPage();
+    setState(() {
+      _passwordCtrl.text = "";
+    });
     return;
   }
 
-  Scaffold buildLoginPage() {
+  Container _buildErrorCard(String msg) {
+    return Container(
+      alignment: Alignment.center,
+      padding: EdgeInsets.all(40),
+      child: Card(
+        child: Padding(
+            padding: EdgeInsets.all(20),
+            child: ListTile(
+              leading: Icon(
+                Icons.cancel,
+                color: Colors.red,
+              ),
+              title: Text(
+                msg,
+                style: TextStyle(fontSize: 20),
+              ),
+            )),
+      ),
+    );
+  }
+
+  Scaffold _buildLoginPage() {
     return Scaffold(
       appBar: AppBar(
         title: Text("登录"),
@@ -100,14 +123,14 @@ class LoginState extends State<LoginPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                buildTextField("请输入学号", usernameCtrl, false),
-                buildTextField("请输入密码", passwordCtrl, true),
+                _buildTextField("请输入学号", _usernameCtrl, false, Icons.person),
+                _buildTextField("请输入密码", _passwordCtrl, true, Icons.lock),
                 ButtonTheme.bar(
                   child: ButtonBar(
                     children: <Widget>[
                       RaisedButton(
                         onPressed: () {
-                          submit();
+                          _submit();
                         },
                         child: Text(
                           "登录",
@@ -127,13 +150,13 @@ class LoginState extends State<LoginPage> {
     );
   }
 
-  Padding buildTextField(
-      String hint, TextEditingController controller, bool isPassword) {
+  Padding _buildTextField(String hint, TextEditingController controller,
+      bool isPassword, IconData icon) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 20),
       child: TextField(
         controller: controller,
-        decoration: InputDecoration(icon: Icon(Icons.person), hintText: hint),
+        decoration: InputDecoration(icon: Icon(icon), hintText: hint),
         obscureText: isPassword,
       ),
     );
