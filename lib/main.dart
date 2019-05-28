@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'package:smulib_booking_assistant/booking/index.dart';
 import 'package:smulib_booking_assistant/booking/login.dart';
 
 void main() => runApp(MyApp());
@@ -12,8 +11,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      // home: MyHomePage(title: 'Flutter Demo Home Page'),
-      // home: BookingPage(),
       home: LoginPage(),
     );
   }

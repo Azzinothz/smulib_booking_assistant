@@ -3,8 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Dio dio = Dio();
 
-// const baseURL = "http://101.132.144.204:8082";
-const baseURL = "http://127.0.0.1:8082";
+const baseURL = "http://101.132.144.204:8082";
+// const baseURL = "http://127.0.0.1:8082";
 String token = "";
 String name = "";
 String stuID = "";
